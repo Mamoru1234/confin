@@ -12,8 +12,11 @@ CREATE TABLE users(
 
 CREATE TABLE tag(
     id SERIAL PRIMARY KEY,
+    namespace TEXT NOT NULL,
     value TEXT NOT NULL
 );
+
+CREATE INDEX tag_namespace ON tag(namespace);
 
 CREATE TABLE "outcome_item"(
    id SERIAL PRIMARY KEY,

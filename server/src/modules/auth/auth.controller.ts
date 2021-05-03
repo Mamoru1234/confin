@@ -4,6 +4,9 @@ import { User } from '../../decorators/user.decorator';
 import UserEntity from '../database/entities/user.entity';
 import { UserSession } from '../../constant/user-session';
 import AppAuthGuard from '../../guards/app-auth.guard';
+import UserResponse from '../../dto/user.response';
+import { plainToClass } from 'class-transformer';
+import { DEFAULT_TRANSFORM_OPTIONS } from '../../constant/class-transform.options';
 
 @Controller('auth')
 export default class AuthController {
@@ -19,10 +22,7 @@ export default class AuthController {
 
   @Get('me')
   @UseGuards(AppAuthGuard)
-  async getMe(
-    @Session() session: UserSession,
-    @User() user: UserEntity,
-  ): Promise<void> {
-    console.log('me: ', session, user);
+  async getMe(@User() user: UserEntity): Promise<UserResponse> {
+    return plainToClass(UserResponse, user, DEFAULT_TRANSFORM_OPTIONS);
   }
 }

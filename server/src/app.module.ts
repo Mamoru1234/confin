@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import AuthModule from './modules/auth/auth.module';
 import RedisModule from './modules/redis/redis.module';
+import OutcomeTagModule from './modules/outcome-tag/outcome-tag.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import RedisModule from './modules/redis/redis.module';
     }),
     AuthModule,
     RedisModule,
+    OutcomeTagModule,
   ],
 })
 export default class AppModule {}
