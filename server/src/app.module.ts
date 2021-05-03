@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import AuthModule from './modules/auth/auth.module';
 import RedisModule from './modules/redis/redis.module';
 import OutcomeTagModule from './modules/outcome-tag/outcome-tag.module';
+import OutcomeModule from './modules/outcome/outcome.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import OutcomeTagModule from './modules/outcome-tag/outcome-tag.module';
     AuthModule,
     RedisModule,
     OutcomeTagModule,
+    OutcomeModule,
   ],
 })
 export default class AppModule {}

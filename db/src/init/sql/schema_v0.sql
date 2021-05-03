@@ -20,6 +20,8 @@ CREATE INDEX tag_namespace ON tag(namespace);
 
 CREATE TABLE "outcome_item"(
    id SERIAL PRIMARY KEY,
+   "user_id" INT REFERENCES users(id),
+   timestamp BIGINT NOT NULL,
    amount INT NOT NULL,
    currency VARCHAR(5) NOT NULL,
    description TEXT NOT NULL

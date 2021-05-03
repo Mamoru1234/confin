@@ -8,7 +8,10 @@ export class NumericTransformer implements ValueTransformer {
     return +value;
   }
 
-  to(value?: number): string {
+  to(value: any): string {
+    if (typeof value === 'object') {
+      return value;
+    }
     if (value == null) {
       return value as any;
     }
