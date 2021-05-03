@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { DAO_LIST } from './dao';
 
 @Module({
   imports: [
@@ -26,5 +27,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
       inject: [ConfigService],
     }),
   ],
+  providers: [...DAO_LIST],
+  exports: [TypeOrmModule, ...DAO_LIST],
 })
 export default class DatabaseModule {}
