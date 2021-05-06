@@ -5,7 +5,7 @@ import OutcomeEntity from '../database/entities/outcome.entity';
 import TagDao from '../database/dao/tag.dao';
 import {
   Between,
-  Connection, DeepPartial,
+  Connection,
   FindConditions,
   In,
   LessThanOrEqual,
@@ -49,7 +49,11 @@ export default class OutcomeService {
     });
   }
 
-  update(user: UserEntity, outcomeId: number, request: UpdateOutcomeRequest): Promise<OutcomeEntity> {
+  update(
+    user: UserEntity,
+    outcomeId: number,
+    request: UpdateOutcomeRequest,
+  ): Promise<OutcomeEntity> {
     return this.connection.transaction(async (txn) => {
       const update: any = {};
       if (request.tags) {
@@ -60,15 +64,21 @@ export default class OutcomeService {
           },
         });
       }
-      (Object.keys(request) as (keyof UpdateOutcomeRequest)[]).forEach((key) => {
-        if (request[key] != null) {
-          update[key] = request[key] as any;
-        }
-      });
-      await this.outcomeDao.update(txn, {
-        user,
-        id: outcomeId,
-      }, update);
+      (Object.keys(request) as (keyof UpdateOutcomeRequest)[]).forEach(
+        (key) => {
+          if (request[key] != null) {
+            update[key] = request[key] as any;
+          }
+        },
+      );
+      await this.outcomeDao.update(
+        txn,
+        {
+          user,
+          id: outcomeId,
+        },
+        update,
+      );
       return this.outcomeDao.findOne(txn, {
         where: {
           id: outcomeId,
@@ -76,7 +86,7 @@ export default class OutcomeService {
         },
         relations: ['tags'],
       });
-    })
+    });
   }
 
   listOutcome(

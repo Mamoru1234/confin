@@ -22,7 +22,11 @@ export abstract class AbstractDao<T> {
     return txn.getRepository(this.target).save(data);
   }
 
-  update(txn: EntityManager, condition: FindConditions<T>, data: DeepPartial<T>) {
+  update(
+    txn: EntityManager,
+    condition: FindConditions<T>,
+    data: DeepPartial<T>,
+  ) {
     return txn.getRepository(this.target).update(condition, data);
   }
 }
