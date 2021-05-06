@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-center">
+  <div class="py-3 px-5">
+    <div><h2>Login page</h2></div>
+    <form [formGroup]="form" (ngSubmit)="login()">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" formControlName="email">
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Пароль</label>
+        <input type="password" class="form-control" id="password" formControlName="password">
+      </div>
+      <div class="d-grid">
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="isLoading$ | async"
+        >Вхід</button>
+      </div>
+    </form>
+  </div>
+</div>
