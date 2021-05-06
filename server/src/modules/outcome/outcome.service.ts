@@ -5,7 +5,7 @@ import OutcomeEntity from '../database/entities/outcome.entity';
 import TagDao from '../database/dao/tag.dao';
 import {
   Between,
-  Connection,
+  Connection, DeepPartial,
   FindConditions,
   In,
   LessThanOrEqual,
@@ -14,6 +14,7 @@ import {
 import TagEntity from '../database/entities/tag.entity';
 import OutcomeDao from '../database/dao/outcome.dao';
 import { ListOutcomeQuery } from './dto/list-outcome.query';
+import UpdateOutcomeRequest from './dto/update-outcome.request';
 
 @Injectable()
 export default class OutcomeService {
@@ -46,6 +47,36 @@ export default class OutcomeService {
         tags,
       });
     });
+  }
+
+  update(user: UserEntity, outcomeId: number, request: UpdateOutcomeRequest): Promise<OutcomeEntity> {
+    return this.connection.transaction(async (txn) => {
+      const update: any = {};
+      if (request.tags) {
+        update.tags = await this.tagDao.find(txn, {
+          where: {
+            namespace: `outcome:${user.id}`,
+            id: In(request.tags),
+          },
+        });
+      }
+      (Object.keys(request) as (keyof UpdateOutcomeRequest)[]).forEach((key) => {
+        if (request[key] != null) {
+          update[key] = request[key] as any;
+        }
+      });
+      await this.outcomeDao.update(txn, {
+        user,
+        id: outcomeId,
+      }, update);
+      return this.outcomeDao.findOne(txn, {
+        where: {
+          id: outcomeId,
+          user,
+        },
+        relations: ['tags'],
+      });
+    })
   }
 
   listOutcome(

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { User } from '../../decorators/user.decorator';
 import AppAuthGuard from '../../guards/app-auth.guard';
 import UserEntity from '../database/entities/user.entity';
@@ -20,6 +20,16 @@ export default class OutcomeController {
     @Body() request: CreateOutcomeRequest,
   ): Promise<OutcomeResponse> {
     const outcome = await this.outcomeService.create(user, request);
+    return plainToClass(OutcomeResponse, outcome, DEFAULT_TRANSFORM_OPTIONS);
+  }
+
+  @Put('/:outcomeId')
+  async updateOutcome(
+    @User() user: UserEntity,
+    @Body() request: CreateOutcomeRequest,
+    @Param('outcomeId') outcomeId: string,
+  ): Promise<OutcomeResponse> {
+    const outcome = await this.outcomeService.update(user, +outcomeId, request);
     return plainToClass(OutcomeResponse, outcome, DEFAULT_TRANSFORM_OPTIONS);
   }
 
