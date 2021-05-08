@@ -9,7 +9,7 @@
   "scripts": {
     "prebuild": "rm -rf build",
     "build": "tsc -p .",
-    "start": "ts-node-dev ./src/main.ts",
+    "start": "NODE_ENV=development ts-node-dev ./src/main.ts",
     "lint": "eslint \"./src/**/*.ts\"",
     "lint:fix": "eslint \"./src/**/*.ts\" --fix"
   },
