@@ -19,7 +19,10 @@ import { DAO_LIST } from './dao';
           username: configService.get('DB_USERNAME'),
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DATABASE_NAME', 'server'),
-          entities: [`${__dirname}/entities/*.entity.ts`],
+          entities: [
+            `${__dirname}/entities/*.entity.js`,
+            `${__dirname}/entities/*.entity.ts`,
+          ],
           autoLoadEntities: true,
           synchronize: false,
         };

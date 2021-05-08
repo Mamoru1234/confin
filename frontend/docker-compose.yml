@@ -1,0 +1,14 @@
+version: '3'
+services:
+  frontend:
+    image: oleksiygontarpersonal/confin:frontend-0.0.0
+    build: .
+    environment:
+      API_URL: http://server.confin:3000
+    ports:
+      - 80:80
+
+networks:
+  default:
+    external:
+      name: confin

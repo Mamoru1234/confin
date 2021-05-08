@@ -1,0 +1,30 @@
+limit_req_zone $binary_remote_addr zone=frontend:100m rate=100r/s;
+limit_req_zone $binary_remote_addr zone=backend:100m rate=5r/s;
+
+server {
+  listen 80;
+  root /user/app/dist;
+  location /api/v1 {
+    limit_req zone=backend burst=20 nodelay;
+    proxy_pass $API_URL;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    # kill cache
+    add_header Last-Modified $date_gmt;
+    add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    if_modified_since off;
+    expires off;
+    etag off;
+  }
+  location / {
+    limit_req zone=frontend burst=50;
+    try_files $uri /index.html;
+  }
+  location = /index.html {
+    # kill cache
+    add_header Last-Modified $date_gmt;
+    add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    if_modified_since off;
+    expires off;
+    etag off;
+  }
+}
