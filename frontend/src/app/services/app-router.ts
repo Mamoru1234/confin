@@ -14,6 +14,7 @@ export class AppRouter {
     // noinspection JSIgnoredPromiseFromCall
     this.router.navigate([url], extras);
   }
+
   saveNavigation(url: string): void {
     this.navigate(url, {
       queryParams: {
@@ -21,6 +22,7 @@ export class AppRouter {
       },
     });
   }
+
   restoreNavigation(defaultUrl: string): void {
     const redirect = this.route.snapshot.queryParams.redirect;
     const targetUrl = redirect

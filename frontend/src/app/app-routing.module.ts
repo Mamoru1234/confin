@@ -10,18 +10,18 @@ const routes: Routes = [
     loadChildren: () => import('./pages/main-page/main-page.module').then((m) => m.MainPageModule),
   },
   {
+    path: 'expenses',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./pages/expenses/expenses.module').then(m => m.ExpensesModule),
+  },
+  {
     path: 'login',
     pathMatch: 'full',
     loadChildren: () => import('./pages/login-page/login-page.module').then((m) => m.LoginPageModule),
   },
   {
-    path: 'not-found',
-    pathMatch: 'full',
-    loadChildren: () => import('./pages/not-found/not-found.module').then((m) => m.NotFoundModule),
-  },
-  {
     path: '**',
-    redirectTo: 'not-found',
+    loadChildren: () => import('./pages/not-found/not-found.module').then((m) => m.NotFoundModule),
   },
 ];
 

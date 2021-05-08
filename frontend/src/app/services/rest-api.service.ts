@@ -27,4 +27,10 @@ export class RestApiService {
       withCredentials: true,
     }).toPromise();
   }
+
+  addExpense(data: any): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/outcome/`, data, {
+      withCredentials: true,
+    });
+  }
 }

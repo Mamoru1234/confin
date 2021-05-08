@@ -1,0 +1,51 @@
+<app-landing>
+  <div class="px-5">
+    <h2>New expenses</h2>
+    <app-server-error-container [error]="addExpenseWrapper.error$ | async"></app-server-error-container>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <app-input-wrapper [control]="form.get('amount')">
+        <div class="mb-3">
+          <label for="amount" class="form-label">Sum</label>
+          <input type="number" class="form-control" id="amount" formControlName="amount">
+        </div>
+      </app-input-wrapper>
+      <app-input-wrapper [control]="form.get('description')">
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <input type="text" class="form-control" id="description" formControlName="description">
+        </div>
+      </app-input-wrapper>
+      <app-input-wrapper [control]="form.get('date')">
+        <div class="mb-3">
+          <label for="date" class="form-label">date</label>
+          <input
+            type="date"
+            class="form-control"
+            id="date"
+            formControlName="date"
+          >
+        </div>
+      </app-input-wrapper>
+      <app-input-wrapper [control]="form.get('time')">
+        <div class="mb-3">
+          <label for="time" class="form-label">Час(оцпіонально)</label>
+          <input
+            type="time"
+            class="form-control"
+            id="time"
+            formControlName="time"
+          >
+        </div>
+      </app-input-wrapper>
+      <div class="d-grid">
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="addExpenseWrapper.isInStatus(FetchStatus.IN_PROGRESS) | async"
+        >
+          add
+        </button>
+      </div>
+    </form>
+  </div>
+</app-landing>

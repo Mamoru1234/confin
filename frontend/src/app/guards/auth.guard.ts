@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
       .pipe(
         mapTo(true),
         catchError(() => {
-          this.appRouter.navigate('/login');
+          this.appRouter.saveNavigation('/login');
           return of(false);
         }),
       );

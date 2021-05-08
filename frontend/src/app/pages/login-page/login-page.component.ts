@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FetchService, FetchStatus } from '../../services/fetch.service';
 import { RestApiService } from '../../services/rest-api.service';
 import { switchMap, tap } from 'rxjs/operators';
+import { AppRouter } from '../../services/app-router';
 
 @Component({
   selector: 'app-login-page',
@@ -17,6 +18,7 @@ export class LoginPageComponent implements OnInit {
   isLoading$ = this.loginFetchWrapper.isInStatus(FetchStatus.IN_PROGRESS);
 
   constructor(
+    private readonly appRouter: AppRouter,
     private readonly formBuilder: FormBuilder,
     private readonly fetchService: FetchService,
     private readonly restApiService: RestApiService,
@@ -30,15 +32,14 @@ export class LoginPageComponent implements OnInit {
   }
 
   login(): void {
-    console.log(this.form.value);
     if (!this.form.valid) {
       return;
     }
     this.loginFetchWrapper.fetch(this.restApiService.login(this.form.value))
       .pipe(
         switchMap(() => this.restApiService.getMe()),
-        tap((user) => {
-          console.log('USer: ', user);
+        tap(() => {
+          this.appRouter.restoreNavigation('/');
         }),
       )
       .subscribe();
