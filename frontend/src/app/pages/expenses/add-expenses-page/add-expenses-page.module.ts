@@ -6,6 +6,7 @@ import { LandingModule } from '../../../components/landing/landing.module';
 import { ServerErrorContainerModule } from '../../../components/server-error-container/server-error-container.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InputWrapperModule } from '../../../components/input-wrapper/input-wrapper.module';
+import { LoaderModule } from '../../../components/loader/loader.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { InputWrapperModule } from '../../../components/input-wrapper/input-wrap
     ServerErrorContainerModule,
     ReactiveFormsModule,
     InputWrapperModule,
+    LoaderModule,
   ],
 })
 export class AddExpensesPageModule { }

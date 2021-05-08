@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FetchService, FetchStatus } from '../../../services/fetch.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RestApiService } from '../../../services/rest-api.service';
+import { BehaviorSubject, merge } from 'rxjs';
+import { TagResponse } from '../../../services/rest-api.dto';
+import { tap } from 'rxjs/operators';
 
 const SCALE = 10 ** 2;
 
@@ -13,7 +16,12 @@ const SCALE = 10 ** 2;
 })
 export class AddExpensesPageComponent implements OnInit {
   addExpenseWrapper = this.fetchService.createWrapper();
+  fetchTagsWrapper = this.fetchService.createWrapper();
+  loading$ = this.fetchTagsWrapper.isInStatuses(FetchStatus.IN_PROGRESS, FetchStatus.INIT);
+  error$ = merge(this.fetchTagsWrapper.error$, this.addExpenseWrapper.error$);
   form!: FormGroup;
+  tags$ = new BehaviorSubject<TagResponse[]>([]);
+  selectedTags$ = new BehaviorSubject<number[]>([]);
   FetchStatus = FetchStatus;
   constructor(
     private readonly fetchService: FetchService,
@@ -28,6 +36,14 @@ export class AddExpensesPageComponent implements OnInit {
       time: [null],
       date: [null, [Validators.required]],
     });
+    this.loadData();
+  }
+
+  loadData(): void {
+    this.fetchTagsWrapper
+      .fetch(this.restApiService.getAllTags())
+      .pipe(tap((tags) => this.tags$.next(tags)))
+      .subscribe()
   }
 
   submit(): void {
@@ -39,6 +55,7 @@ export class AddExpensesPageComponent implements OnInit {
       amount: this.formatSum(),
       currency: 'UAH',
       timestamp: this.formatTimestamp(),
+      tags: this.selectedTags$.value,
     })).subscribe();
   }
 
@@ -56,5 +73,14 @@ export class AddExpensesPageComponent implements OnInit {
   formatSum(): number {
     const { amount } = this.form.value;
     return parseFloat(amount.toFixed(2)) * SCALE;
+  }
+
+  toggle(id: number): void {
+    const selectedTags = this.selectedTags$.value;
+    if (selectedTags.includes(id)) {
+      this.selectedTags$.next(selectedTags.filter((it) => it !== id));
+    } else {
+      this.selectedTags$.next(selectedTags.concat([id]));
+    }
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { TagResponse } from './rest-api.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,18 @@ export class RestApiService {
 
   addExpense(data: any): Observable<any> {
     return this.http.post(`${environment.apiUrl}/outcome/`, data, {
+      withCredentials: true,
+    });
+  }
+
+  getAllTags(): Observable<TagResponse[]> {
+    return this.http.get<TagResponse[]>(`${environment.apiUrl}/outcome-tag/list`, {
+      withCredentials: true,
+    });
+  }
+
+  createTag(data: any): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/outcome-tag`, data, {
       withCredentials: true,
     });
   }

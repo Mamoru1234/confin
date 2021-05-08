@@ -1,51 +1,72 @@
 <app-landing>
   <div class="px-5">
     <h2>Нова витрата</h2>
-    <app-server-error-container [error]="addExpenseWrapper.error$ | async"></app-server-error-container>
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <app-input-wrapper [control]="form.get('amount')">
-        <div class="mb-3">
-          <label for="amount" class="form-label">Сума</label>
-          <input type="number" class="form-control" id="amount" formControlName="amount">
+    <app-server-error-container [error]="error$ | async"></app-server-error-container>
+    <app-loader [loading]="loading$ | async"></app-loader>
+    <ng-container *ngIf="!(loading$ | async)">
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <app-input-wrapper [control]="form.get('amount')">
+          <div class="mb-3">
+            <label for="amount" class="form-label">Сума</label>
+            <input type="number" class="form-control" id="amount" formControlName="amount">
+          </div>
+        </app-input-wrapper>
+        <app-input-wrapper [control]="form.get('description')">
+          <div class="mb-3">
+            <label for="description" class="form-label">Опис</label>
+            <input type="text" class="form-control" id="description" formControlName="description">
+          </div>
+        </app-input-wrapper>
+        <app-input-wrapper [control]="form.get('date')">
+          <div class="mb-3">
+            <label for="date" class="form-label">Дата</label>
+            <input
+              type="date"
+              class="form-control"
+              id="date"
+              formControlName="date"
+            >
+          </div>
+        </app-input-wrapper>
+        <app-input-wrapper [control]="form.get('time')">
+          <div class="mb-3">
+            <label for="time" class="form-label">Час(необов'язково)</label>
+            <input
+              type="time"
+              class="form-control"
+              id="time"
+              formControlName="time"
+            >
+          </div>
+        </app-input-wrapper>
+        <div class="py-2">
+          <h5>Теги:</h5>
+          <ng-container *ngIf="tags$ | async as tags">
+            <div *ngIf="tags.length === 0">Поки немає тегів</div>
+            <div class="d-flex" *ngIf="selectedTags$ | async as selectedTags">
+              <div
+                *ngFor="let tag of tags"
+                class="mx-2 my-1 p-1 btn btn-outline-success"
+                [class.active]="selectedTags.includes(tag.id)"
+                (click)="toggle(tag.id)"
+              >
+                {{tag.value}}
+              </div>
+            </div>
+          </ng-container>
+          <!--suppress HtmlUnknownTarget -->
+          <a href="/tags">Додати теги</a>
         </div>
-      </app-input-wrapper>
-      <app-input-wrapper [control]="form.get('description')">
-        <div class="mb-3">
-          <label for="description" class="form-label">Опис</label>
-          <input type="text" class="form-control" id="description" formControlName="description">
-        </div>
-      </app-input-wrapper>
-      <app-input-wrapper [control]="form.get('date')">
-        <div class="mb-3">
-          <label for="date" class="form-label">Дата</label>
-          <input
-            type="date"
-            class="form-control"
-            id="date"
-            formControlName="date"
+        <div class="d-grid">
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="addExpenseWrapper.isInStatus(FetchStatus.IN_PROGRESS) | async"
           >
+            Додати
+          </button>
         </div>
-      </app-input-wrapper>
-      <app-input-wrapper [control]="form.get('time')">
-        <div class="mb-3">
-          <label for="time" class="form-label">Час(необов'язково)</label>
-          <input
-            type="time"
-            class="form-control"
-            id="time"
-            formControlName="time"
-          >
-        </div>
-      </app-input-wrapper>
-      <div class="d-grid">
-        <button
-          class="btn btn-primary"
-          type="submit"
-          [disabled]="addExpenseWrapper.isInStatus(FetchStatus.IN_PROGRESS) | async"
-        >
-          Додати
-        </button>
-      </div>
-    </form>
+      </form>
+    </ng-container>
   </div>
 </app-landing>

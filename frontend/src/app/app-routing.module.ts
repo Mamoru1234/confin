@@ -15,6 +15,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/expenses/expenses.module').then(m => m.ExpensesModule),
   },
   {
+    path: 'tags',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./pages/tags-page/tags-page.module').then(m => m.TagsPageModule),
+  },
+  {
     path: 'login',
     pathMatch: 'full',
     loadChildren: () => import('./pages/login-page/login-page.module').then((m) => m.LoginPageModule),

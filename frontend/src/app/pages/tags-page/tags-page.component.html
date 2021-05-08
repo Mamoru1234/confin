@@ -1,0 +1,38 @@
+<app-landing>
+  <div class="px-5">
+    <h2>Керування тегами</h2>
+    <app-server-error-container [error]="error$ | async"></app-server-error-container>
+    <app-loader [loading]="loading$ | async"></app-loader>
+    <ng-container *ngIf="!(loading$ | async)">
+      <div>
+        <h5>Теги:</h5>
+        <div class="py-2" *ngIf="tags$ | async as tags">
+          <div *ngIf="tags.length === 0">Немає доступних тегів</div>
+          <div class="d-flex">
+            <div *ngFor="let tag of tags" class="mx-2 my-1 p-1 btn btn-outline-success">
+              {{tag.value}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <h5>Новий тег</h5>
+    <form [formGroup]="newTagForm" (ngSubmit)="createTag()">
+      <app-input-wrapper [control]="newTagForm.get('value')">
+        <div class="mb-3">
+          <label for="value" class="form-label">Значення</label>
+          <input type="text" class="form-control" id="value" formControlName="value">
+        </div>
+      </app-input-wrapper>
+      <div class="d-grid">
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="addTagWrapper.isInStatus(FetchStatus.IN_PROGRESS) | async"
+        >
+          Додати
+        </button>
+      </div>
+    </form>
+  </div>
+</app-landing>
