@@ -18,7 +18,7 @@ export default class AppAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     if (!req.session || !req.session.userId) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('No user in session');
     }
     const userSession: UserSession = req.session;
     const user = await this.userDao.findOne(this.connection.manager, {
@@ -27,7 +27,7 @@ export default class AppAuthGuard implements CanActivate {
       },
     });
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid user in session');
     }
     req.user = user;
     return true;

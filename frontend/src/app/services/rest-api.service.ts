@@ -12,6 +12,19 @@ export class RestApiService {
   ) {
   }
   login(data: any): Observable<void> {
-    return this.http.post<void>(`${environment.apiUrl}/auth/login`, data);
+    return this.http.post<void>(`${environment.apiUrl}/auth/login`, data, {
+      withCredentials: true,
+    });
+  }
+  getMe(): Observable<void> {
+    return this.http.get<void>(`${environment.apiUrl}/auth/me`, {
+      withCredentials: true,
+    });
+  }
+
+  logout(): Promise<void> {
+    return this.http.post<void>(`${environment.apiUrl}/auth/logout`, {}, {
+      withCredentials: true,
+    }).toPromise();
   }
 }

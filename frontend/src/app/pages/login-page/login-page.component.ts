@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FetchService, FetchStatus } from '../../services/fetch.service';
 import { RestApiService } from '../../services/rest-api.service';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login-page',
@@ -34,6 +35,12 @@ export class LoginPageComponent implements OnInit {
       return;
     }
     this.loginFetchWrapper.fetch(this.restApiService.login(this.form.value))
+      .pipe(
+        switchMap(() => this.restApiService.getMe()),
+        tap((user) => {
+          console.log('USer: ', user);
+        }),
+      )
       .subscribe();
   }
 }

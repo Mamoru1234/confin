@@ -26,6 +26,10 @@ async function main(): Promise<void> {
       store: new RedisStore({
         client: app.get(REDIS_CLIENT),
       }),
+      cookie: {
+        httpOnly: true,
+        secure: false,
+      },
       saveUninitialized: false,
       resave: false,
     }),
@@ -34,7 +38,10 @@ async function main(): Promise<void> {
   app.use(helmet());
   app.use(morgan('dev'));
   if (configService.get('NODE_ENV') === 'development') {
-    app.enableCors();
+    app.enableCors({
+      origin: [configService.get('CORS_ORIGIN', 'http://localhost:4200')],
+      credentials: true,
+    });
   }
   await app.listenAsync(+configService.get('APP_PORT', 3000));
 }
