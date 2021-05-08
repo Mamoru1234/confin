@@ -1,23 +1,23 @@
 <app-landing>
   <div class="px-5">
-    <h2>New expenses</h2>
+    <h2>Нова витрата</h2>
     <app-server-error-container [error]="addExpenseWrapper.error$ | async"></app-server-error-container>
     <form [formGroup]="form" (ngSubmit)="submit()">
       <app-input-wrapper [control]="form.get('amount')">
         <div class="mb-3">
-          <label for="amount" class="form-label">Sum</label>
+          <label for="amount" class="form-label">Сума</label>
           <input type="number" class="form-control" id="amount" formControlName="amount">
         </div>
       </app-input-wrapper>
       <app-input-wrapper [control]="form.get('description')">
         <div class="mb-3">
-          <label for="description" class="form-label">Description</label>
+          <label for="description" class="form-label">Опис</label>
           <input type="text" class="form-control" id="description" formControlName="description">
         </div>
       </app-input-wrapper>
       <app-input-wrapper [control]="form.get('date')">
         <div class="mb-3">
-          <label for="date" class="form-label">date</label>
+          <label for="date" class="form-label">Дата</label>
           <input
             type="date"
             class="form-control"
@@ -28,7 +28,7 @@
       </app-input-wrapper>
       <app-input-wrapper [control]="form.get('time')">
         <div class="mb-3">
-          <label for="time" class="form-label">Час(оцпіонально)</label>
+          <label for="time" class="form-label">Час(необов'язково)</label>
           <input
             type="time"
             class="form-control"
@@ -43,7 +43,7 @@
           type="submit"
           [disabled]="addExpenseWrapper.isInStatus(FetchStatus.IN_PROGRESS) | async"
         >
-          add
+          Додати
         </button>
       </div>
     </form>
