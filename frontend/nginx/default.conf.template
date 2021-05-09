@@ -2,7 +2,21 @@ limit_req_zone $binary_remote_addr zone=frontend:100m rate=100r/s;
 limit_req_zone $binary_remote_addr zone=backend:100m rate=5r/s;
 
 server {
+  server_name confin.mamoru.kiev.ua
   listen 80;
+  listen 443 ssl; # managed by Certbot
+
+  # RSA certificate
+  ssl_certificate /etc/letsencrypt/live/confin.mamoru.kiev.ua/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/confin.mamoru.kiev.ua/privkey.pem; # managed by Certbot
+
+  include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+
+  # Redirect non-https traffic to https
+  if ($scheme != "https") {
+      return 301 https://$host$request_uri;
+  } # managed by Certbot
+
   root /user/app/dist;
   location /api/v1 {
     limit_req zone=backend burst=20 nodelay;

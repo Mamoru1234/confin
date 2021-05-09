@@ -2,7 +2,7 @@ version: '3'
 services:
   db:
     image: oleksiygontarpersonal/confin:db-0.0.0
-    build: .
+    build: ./src
     container_name: db.confin
     environment:
       POSTGRES_PASSWORD: super_secret_admin

@@ -1,0 +1,40 @@
+version: '3'
+services:
+  db:
+    image: oleksiygontarpersonal/confin:db-0.0.0
+    container_name: db.confin
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      APP_USER_PASSWORD: ${APP_USER_PASSWORD}
+
+  cache:
+    image: redis:6.2.1-alpine
+    container_name: cache.confin
+
+  server:
+    image: oleksiygontarpersonal/confin:server-0.0.0
+    container_name: server.confin
+    env_file: .env
+    depends_on:
+      - db
+      - cache
+    environment:
+      DB_HOST: db.confin
+      REDIS_HOST: cache.confin
+      DB_USERNAME: server
+      DB_PASSWORD: ${APP_USER_PASSWORD}
+      SESSION_SECRET: ${SESSION_SECRET}
+      NODE_ENV: production
+      APP_PASS_SECRET: ${APP_PASS_SECRET}
+
+  frontend:
+    image: oleksiygontarpersonal/confin:frontend-0.0.0
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./letsencrypt:/etc/letsencrypt
+    depends_on:
+      - server
+    environment:
+      API_URL: http://server.confin:3000
