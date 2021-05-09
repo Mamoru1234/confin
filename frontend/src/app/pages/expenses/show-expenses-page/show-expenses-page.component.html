@@ -1,0 +1,50 @@
+<app-landing>
+  <div class="px-5">
+    <h2>Витрати</h2>
+    <app-server-error-container [error]="error$ | async"></app-server-error-container>
+    <app-loader [loading]="loading$ | async"></app-loader>
+    <div class="py-1">
+      <form [formGroup]="searchForm" (ngSubmit)="search()">
+        <div class="row mb-3">
+          <div class="col">
+            <label for="minDate" class="form-label">Початкова дата</label>
+            <input
+              type="date"
+              class="form-control"
+              id="minDate"
+              formControlName="minDate"
+            >
+          </div>
+          <div class="col">
+            <label for="maxDate" class="form-label">Кінцева дата</label>
+            <input
+              type="date"
+              class="form-control"
+              id="maxDate"
+              formControlName="maxDate"
+            >
+          </div>
+        </div>
+        <div class="d-grid">
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="loading$ | async"
+          >
+            Пошук
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="py-1" *ngIf="!(loading$ | async)">
+      <ng-container *ngIf="expenses$ | async as expenses">
+        <div *ngFor="let expense of expenses" class="card my-1">
+          <div class="card-body">
+            <div>Опис: {{expense.description}}</div>
+            <div>Сума: {{expense.amount / 100}}</div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</app-landing>

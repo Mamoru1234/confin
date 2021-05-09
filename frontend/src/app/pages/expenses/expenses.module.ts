@@ -12,6 +12,10 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('./add-expenses-page/add-expenses-page.module')
           .then((m) => m.AddExpensesPageModule),
       },
+      {
+        path: 'show',
+        loadChildren: () => import('./show-expenses-page/show-expenses-page.module').then(m => m.ShowExpensesPageModule),
+      },
     ]),
   ],
 })

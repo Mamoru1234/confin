@@ -5,6 +5,7 @@ import { RestApiService } from '../../../services/rest-api.service';
 import { BehaviorSubject, merge } from 'rxjs';
 import { TagResponse } from '../../../services/rest-api.dto';
 import { tap } from 'rxjs/operators';
+import { formatDateTime } from '../../../utils/date-time.utils';
 
 const SCALE = 10 ** 2;
 
@@ -54,20 +55,9 @@ export class AddExpensesPageComponent implements OnInit {
       description: this.form.value.description,
       amount: this.formatSum(),
       currency: 'UAH',
-      timestamp: this.formatTimestamp(),
+      timestamp: formatDateTime(this.form.value.date, this.form.value.time).getTime(),
       tags: this.selectedTags$.value,
     })).subscribe();
-  }
-
-  formatTimestamp(): number {
-    const formValue = this.form.value;
-    const [year, month, day] = formValue.date.split('-').map((it: string) => +it);
-    if (!formValue.time) {
-      return new Date(year, month, day).getTime();
-    }
-    const [hour, minute] = formValue.time.split(':').map((it: string) => +it);
-    console.log(formValue.time);
-    return new Date(year, month, day, hour, minute).getTime();
   }
 
   formatSum(): number {

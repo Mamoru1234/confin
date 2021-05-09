@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { TagResponse } from './rest-api.dto';
+import { ExpenseResponse, TagResponse } from './rest-api.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +32,13 @@ export class RestApiService {
   addExpense(data: any): Observable<any> {
     return this.http.post(`${environment.apiUrl}/outcome/`, data, {
       withCredentials: true,
+    });
+  }
+
+  listExpenses(search: any): Observable<ExpenseResponse[]> {
+    return this.http.get<ExpenseResponse[]>(`${environment.apiUrl}/outcome/list`, {
+      withCredentials: true,
+      params: search,
     });
   }
 
