@@ -109,6 +109,9 @@ export default class OutcomeService {
     return this.outcomeDao.find(this.connection.manager, {
       where,
       relations: ['tags'],
+      order: {
+        timestamp: 'ASC',
+      },
     });
   }
 }

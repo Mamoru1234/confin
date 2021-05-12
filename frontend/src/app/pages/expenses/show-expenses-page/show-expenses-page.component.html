@@ -37,11 +37,23 @@
       </form>
     </div>
     <div class="py-1" *ngIf="!(loading$ | async)">
+      <div *ngIf="totals$ | async as totals" class="p-1">
+        <div>Загалом: {{totals.totalSum / 100}}</div>
+        <div *ngFor="let tagId of objectKeys(totals.byTags)">
+          {{getTagValue(tagId)}} {{getTotal(tagId) / 100}}
+        </div>
+      </div>
       <ng-container *ngIf="expenses$ | async as expenses">
         <div *ngFor="let expense of expenses" class="card my-1">
           <div class="card-body">
             <div>Опис: {{expense.description}}</div>
             <div>Сума: {{expense.amount / 100}}</div>
+            <div>{{expense.timestamp | date: 'dd.MM.YYYY'}}</div>
+            <div *ngIf="expense.tags" class="d-flex flex-wrap">
+              <div *ngFor="let tag of expense.tags" class="mx-2 my-1 p-1 btn btn-outline-success">
+                {{getTagValue(tag)}}
+              </div>
+            </div>
           </div>
         </div>
       </ng-container>

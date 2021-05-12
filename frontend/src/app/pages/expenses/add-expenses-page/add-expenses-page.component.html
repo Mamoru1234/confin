@@ -3,6 +3,15 @@
     <h2>Нова витрата</h2>
     <app-server-error-container [error]="error$ | async"></app-server-error-container>
     <app-loader [loading]="loading$ | async"></app-loader>
+    <div class="alert alert-success d-flex align-items-center" role="alert" *ngIf="addedExpense$ | async">
+      Нова витрата додана
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+        (click)="addedExpense$.next(false)"></button>
+    </div>
     <ng-container *ngIf="!(loading$ | async)">
       <form [formGroup]="form" (ngSubmit)="submit()">
         <app-input-wrapper [control]="form.get('amount')">

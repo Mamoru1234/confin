@@ -8,6 +8,9 @@ export default class OutcomeResponse {
   amount: number;
 
   @Expose()
+  timestamp: number;
+
+  @Expose()
   currency: string;
 
   @Expose()

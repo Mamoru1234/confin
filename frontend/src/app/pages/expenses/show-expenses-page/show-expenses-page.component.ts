@@ -7,6 +7,11 @@ import { formatDateTime } from '../../../utils/date-time.utils';
 import { RestApiService } from '../../../services/rest-api.service';
 import { ExpenseResponse, TagResponse } from '../../../services/rest-api.dto';
 
+export interface Totals {
+  totalSum: number;
+  byTags: Record<number, number>;
+}
+
 @Component({
   selector: 'app-show-expenses-page',
   templateUrl: './show-expenses-page.component.html',
@@ -16,9 +21,12 @@ import { ExpenseResponse, TagResponse } from '../../../services/rest-api.dto';
 export class ShowExpensesPageComponent implements OnInit {
   fetchTagsWrapper = this.fetchService.createWrapper();
   fetchExpensesWrapper = this.fetchService.createWrapper();
+  NO_TAGS = -1;
 
   expenses$ = new BehaviorSubject<ExpenseResponse[]>([]);
-  tags$ = new BehaviorSubject<TagResponse[]>([]);
+  tags$ = new BehaviorSubject<Record<number, TagResponse>>({});
+  totals$ = new BehaviorSubject<Totals | null>(null);
+  objectKeys = Object.keys;
 
   loading$ = combineLatest([
     this.fetchExpensesWrapper.isInStatuses(FetchStatus.IN_PROGRESS),
@@ -55,11 +63,54 @@ export class ShowExpensesPageComponent implements OnInit {
       search.maxTimestamp = formatDateTime(formValue.maxDate).getTime();
     }
     this.fetchExpensesWrapper.fetch(this.restApiService.listExpenses(search))
-      .pipe(tap((expenses) => this.expenses$.next(expenses)))
+      .pipe(tap((expenses) => {
+        const totals: Totals = {
+          totalSum: 0,
+          byTags: {},
+        };
+        const getByTag = (tagId: number) => {
+          return totals.byTags[tagId] || 0;
+        };
+        expenses.forEach((it) => {
+          totals.totalSum += it.amount;
+          if (!it.tags || it.tags.length === 0) {
+            totals.byTags[this.NO_TAGS] = getByTag(this.NO_TAGS) + it.amount;
+          }
+          it.tags.forEach((tagId) => {
+            totals.byTags[tagId] = getByTag(tagId) + it.amount;
+          });
+        });
+        this.totals$.next(totals);
+        this.expenses$.next(expenses);
+      }))
       .subscribe();
 
     this.fetchExpensesWrapper.fetch(this.restApiService.getAllTags())
-      .pipe(tap((tags) => this.tags$.next(tags)))
+      .pipe(tap((tags) => {
+        const result: Record<number, TagResponse> = {};
+        tags.forEach((it) => {
+          result[it.id] = it;
+        });
+        this.tags$.next(result);
+      }))
       .subscribe();
+  }
+
+  getTagValue(tagId: string | number): string {
+    const tags = this.tags$.value;
+    if (!tags) {
+      return '';
+    }
+    if (+tagId === this.NO_TAGS) {
+      return 'No tags';
+    }
+    if (!tags[+tagId]) {
+      return '';
+    }
+    return tags[+tagId].value;
+  }
+
+  getTotal(tagId: string): number {
+    return this.totals$.value?.byTags[tagId as any]!;
   }
 }

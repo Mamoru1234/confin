@@ -23,6 +23,8 @@ export class AddExpensesPageComponent implements OnInit {
   form!: FormGroup;
   tags$ = new BehaviorSubject<TagResponse[]>([]);
   selectedTags$ = new BehaviorSubject<number[]>([]);
+  addedExpense$ = new BehaviorSubject<boolean>(false);
+
   FetchStatus = FetchStatus;
   constructor(
     private readonly fetchService: FetchService,
@@ -51,13 +53,19 @@ export class AddExpensesPageComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    this.addExpenseWrapper.fetch(this.restApiService.addExpense({
+    const data = {
       description: this.form.value.description,
       amount: this.formatSum(),
       currency: 'UAH',
       timestamp: formatDateTime(this.form.value.date, this.form.value.time).getTime(),
       tags: this.selectedTags$.value,
-    })).subscribe();
+    };
+    this.addExpenseWrapper
+      .fetch(this.restApiService.addExpense(data))
+      .subscribe(() => {
+        this.form.reset();
+        this.addedExpense$.next(true);
+      });
   }
 
   formatSum(): number {

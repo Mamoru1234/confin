@@ -8,5 +8,6 @@ export interface ExpenseResponse {
   amount: number;
   currency: string;
   description: string;
+  timestamp: number;
   tags: number[];
 }
