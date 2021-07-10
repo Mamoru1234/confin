@@ -15,7 +15,7 @@ import { DAO_LIST } from './dao';
         return {
           type: 'postgres',
           host: configService.get('DB_HOST'),
-          port: +configService.get<number>('DB_PORT'),
+          port: +configService.get<number>('DB_PORT', 5432),
           username: configService.get('DB_USERNAME'),
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DATABASE_NAME', 'server'),

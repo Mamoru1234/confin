@@ -1,4 +1,4 @@
-#/usr/vin/env bash
+#!/usr/bin/env bash
 
 if [[ -f ".env" ]]; then
   echo "Exporting .env variables"

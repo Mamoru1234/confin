@@ -5,7 +5,7 @@ import { RestApiService } from '../../../services/rest-api.service';
 import { BehaviorSubject, merge } from 'rxjs';
 import { TagResponse } from '../../../services/rest-api.dto';
 import { tap } from 'rxjs/operators';
-import { formatDateTime } from '../../../utils/date-time.utils';
+import { formatDateTime, zeroPadding } from '../../../utils/date-time.utils';
 
 const SCALE = 10 ** 2;
 
@@ -33,11 +33,13 @@ export class AddExpensesPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const now = new Date();
+    const date = `${now.getFullYear()}-${zeroPadding(now.getMonth())}-${zeroPadding(now.getDate())}`;
     this.form = this.formBuilder.group({
       amount: [null, [Validators.required, Validators.min(1)]],
       description: [null, [Validators.required]],
       time: [null],
-      date: [null, [Validators.required]],
+      date: [date, [Validators.required]],
     });
     this.loadData();
   }
@@ -46,7 +48,7 @@ export class AddExpensesPageComponent implements OnInit {
     this.fetchTagsWrapper
       .fetch(this.restApiService.getAllTags())
       .pipe(tap((tags) => this.tags$.next(tags)))
-      .subscribe()
+      .subscribe();
   }
 
   submit(): void {

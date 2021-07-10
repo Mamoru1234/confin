@@ -29,9 +29,11 @@ async function main(): Promise<void> {
       cookie: {
         httpOnly: true,
         secure: false,
+        maxAge: 1000 * 60 * 24 * 2,
       },
       saveUninitialized: false,
       resave: false,
+      rolling: true,
     }),
   );
   app.setGlobalPrefix('/api/v1');
