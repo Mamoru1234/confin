@@ -3,7 +3,7 @@ import { FetchService, FetchStatus } from '../../../services/fetch.service';
 import { BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { formatDateTime } from '../../../utils/date-time.utils';
+import { formatDateTime, zeroPadding } from '../../../utils/date-time.utils';
 import { RestApiService } from '../../../services/rest-api.service';
 import { ExpenseResponse, TagResponse } from '../../../services/rest-api.dto';
 
@@ -44,8 +44,10 @@ export class ShowExpensesPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const now = new Date();
+    const minDate = `${now.getFullYear()}-${zeroPadding(now.getMonth() + 1)}-01`;
     this.searchForm = this.formBuilder.group({
-      minDate: [null],
+      minDate: [minDate],
       maxDate: [null],
     });
   }

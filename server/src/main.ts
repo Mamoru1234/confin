@@ -29,7 +29,7 @@ async function main(): Promise<void> {
       cookie: {
         httpOnly: true,
         secure: false,
-        maxAge: 1000 * 60 * 24 * 2,
+        maxAge: 1000 * 1000 * 60 * 24 * 2,
       },
       saveUninitialized: false,
       resave: false,

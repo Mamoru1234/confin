@@ -34,7 +34,7 @@ export class AddExpensesPageComponent implements OnInit {
 
   ngOnInit(): void {
     const now = new Date();
-    const date = `${now.getFullYear()}-${zeroPadding(now.getMonth())}-${zeroPadding(now.getDate())}`;
+    const date = `${now.getFullYear()}-${zeroPadding(now.getMonth() + 1)}-${zeroPadding(now.getDate())}`;
     this.form = this.formBuilder.group({
       amount: [null, [Validators.required, Validators.min(1)]],
       description: [null, [Validators.required]],
