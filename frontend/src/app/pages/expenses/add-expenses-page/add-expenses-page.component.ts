@@ -5,7 +5,8 @@ import { RestApiService } from '../../../services/rest-api.service';
 import { BehaviorSubject, merge } from 'rxjs';
 import { TagResponse } from '../../../services/rest-api.dto';
 import { tap } from 'rxjs/operators';
-import { formatDateTime, zeroPadding } from '../../../utils/date-time.utils';
+import { formatDateTime } from '../../../utils/date-time.utils';
+import { DateTime } from 'luxon';
 
 const SCALE = 10 ** 2;
 
@@ -33,13 +34,11 @@ export class AddExpensesPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const now = new Date();
-    const date = `${now.getFullYear()}-${zeroPadding(now.getMonth() + 1)}-${zeroPadding(now.getDate())}`;
     this.form = this.formBuilder.group({
       amount: [null, [Validators.required, Validators.min(1)]],
       description: [null, [Validators.required]],
       time: [null],
-      date: [date, [Validators.required]],
+      date: [DateTime.now().toSQLDate(), [Validators.required]],
     });
     this.loadData();
   }
@@ -55,11 +54,13 @@ export class AddExpensesPageComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    const dateTime = formatDateTime(this.form.value.date, this.form.value.time);
+    console.log(dateTime.toJSDate());
     const data = {
       description: this.form.value.description,
       amount: this.formatSum(),
       currency: 'UAH',
-      timestamp: formatDateTime(this.form.value.date, this.form.value.time).getTime(),
+      timestamp: dateTime.toMillis(),
       tags: this.selectedTags$.value,
     };
     this.addExpenseWrapper

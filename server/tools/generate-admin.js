@@ -1,5 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypt = require('crypto');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
 
 function createHash(secret, email, password) {
   const hash = crypt.createHmac('sha512', secret);
@@ -9,9 +11,12 @@ function createHash(secret, email, password) {
 }
 
 function genAdmin() {
-  const secret = process.argv[2];
-  const email = process.argv[3];
-  const password = process.argv[4];
+  const secret = process.env.APP_PASS_SECRET;
+  if (!secret) {
+    throw new Error('Please specify secret');
+  }
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASS;
   console.log(`Email: ${email} Password: ${password}`);
   const hash = createHash(secret, email, password);
   console.log(

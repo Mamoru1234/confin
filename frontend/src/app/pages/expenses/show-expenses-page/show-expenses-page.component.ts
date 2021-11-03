@@ -3,9 +3,9 @@ import { FetchService, FetchStatus } from '../../../services/fetch.service';
 import { BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { formatDateTime, zeroPadding } from '../../../utils/date-time.utils';
 import { RestApiService } from '../../../services/rest-api.service';
 import { ExpenseResponse, TagResponse } from '../../../services/rest-api.dto';
+import { DateTime } from 'luxon';
 
 export interface Totals {
   totalSum: number;
@@ -44,10 +44,8 @@ export class ShowExpensesPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const now = new Date();
-    const minDate = `${now.getFullYear()}-${zeroPadding(now.getMonth() + 1)}-01`;
     this.searchForm = this.formBuilder.group({
-      minDate: [minDate],
+      minDate: [DateTime.now().startOf('month').toSQLDate()],
       maxDate: [null],
     });
   }
@@ -59,10 +57,10 @@ export class ShowExpensesPageComponent implements OnInit {
     const search: any = {};
     const formValue = this.searchForm.value;
     if (formValue.minDate) {
-      search.minTimestamp = formatDateTime(formValue.minDate).getTime();
+      search.minTimestamp = DateTime.fromSQL(formValue.minDate).toMillis();
     }
     if (formValue.maxDate) {
-      search.maxTimestamp = formatDateTime(formValue.maxDate).getTime();
+      search.maxTimestamp = DateTime.fromSQL(formValue.maxDate).toMillis();
     }
     this.fetchExpensesWrapper.fetch(this.restApiService.listExpenses(search))
       .pipe(tap((expenses) => {
@@ -113,6 +111,7 @@ export class ShowExpensesPageComponent implements OnInit {
   }
 
   getTotal(tagId: string): number {
+    // tslint:disable-next-line:no-non-null-assertion
     return this.totals$.value?.byTags[tagId as any]!;
   }
 }
