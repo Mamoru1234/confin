@@ -24,8 +24,6 @@ export class ShowExpensesPageComponent implements OnInit {
   deleteExpenseWrapper = this.fetchService.createWrapper();
   NO_TAGS = -1;
 
-  activeExpenseId$ = new BehaviorSubject(-1);
-
   expenses$ = new BehaviorSubject<ExpenseResponse[]>([]);
   tags$ = new BehaviorSubject<Record<number, TagResponse>>({});
   totals$ = new BehaviorSubject<Totals | null>(null);
@@ -57,7 +55,6 @@ export class ShowExpensesPageComponent implements OnInit {
     if (this.searchForm.invalid) {
       return;
     }
-    this.activeExpenseId$.next(-1);
     const search: any = {};
     const formValue = this.searchForm.value;
     if (formValue.minDate) {
@@ -120,14 +117,10 @@ export class ShowExpensesPageComponent implements OnInit {
   }
 
   handleTrashClick(expenseId: number): void {
-    if (this.activeExpenseId$.value === expenseId) {
+    const shouldDelete = confirm('Точно хочеш видалити цю витрату?');
+    if (shouldDelete) {
       this.deleteExpenseWrapper.fetch(this.restApiService.deleteExpense(expenseId))
         .subscribe(() => this.search());
     }
-    this.activeExpenseId$.next(expenseId);
-  }
-
-  isActiveExpense(expenseId: number): Observable<boolean> {
-    return this.activeExpenseId$.pipe(map(value => value === expenseId));
   }
 }

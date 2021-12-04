@@ -50,7 +50,6 @@
               <div>Опис: {{expense.description}}</div>
               <i
                 class="bi bi-trash"
-                [class.text-danger]="isActiveExpense(expense.id) | async"
                 (click)="handleTrashClick(expense.id)"
               ></i>
             </div>
