@@ -66,7 +66,9 @@ export class AddExpensesPageComponent implements OnInit {
     this.addExpenseWrapper
       .fetch(this.restApiService.addExpense(data))
       .subscribe(() => {
-        this.form.reset();
+        this.form.reset({
+          date: DateTime.now().toSQLDate(),
+        });
         this.addedExpense$.next(true);
       });
   }

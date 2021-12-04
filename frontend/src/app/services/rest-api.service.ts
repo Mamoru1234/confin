@@ -48,6 +48,12 @@ export class RestApiService {
     });
   }
 
+  deleteExpense(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/outcome/${id}`, {
+      withCredentials: true,
+    });
+  }
+
   createTag(data: any): Observable<void> {
     return this.http.post<void>(`${environment.apiUrl}/outcome-tag`, data, {
       withCredentials: true,

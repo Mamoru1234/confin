@@ -23,6 +23,7 @@ import { DAO_LIST } from './dao';
             `${__dirname}/entities/*.entity.js`,
             `${__dirname}/entities/*.entity.ts`,
           ],
+          logging: true,
           autoLoadEntities: true,
           synchronize: false,
         };

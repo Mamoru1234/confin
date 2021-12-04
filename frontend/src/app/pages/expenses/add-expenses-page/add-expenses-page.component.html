@@ -12,7 +12,7 @@
         aria-label="Close"
         (click)="addedExpense$.next(false)"></button>
     </div>
-    <ng-container *ngIf="!(loading$ | async)">
+    <ng-container *ngIf="(loading$ | async) === false">
       <form [formGroup]="form" (ngSubmit)="submit()">
         <app-input-wrapper [control]="form.get('amount')">
           <div class="mb-3">

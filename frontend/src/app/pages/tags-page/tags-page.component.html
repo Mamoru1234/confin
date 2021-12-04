@@ -3,7 +3,7 @@
     <h2>Керування тегами</h2>
     <app-server-error-container [error]="error$ | async"></app-server-error-container>
     <app-loader [loading]="loading$ | async"></app-loader>
-    <ng-container *ngIf="!(loading$ | async)">
+    <ng-container *ngIf="(loading$ | async) === false">
       <div>
         <h5>Теги:</h5>
         <div class="py-2" *ngIf="tags$ | async as tags">

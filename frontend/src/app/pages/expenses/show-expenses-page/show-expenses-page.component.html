@@ -36,7 +36,7 @@
         </div>
       </form>
     </div>
-    <div class="py-1" *ngIf="!(loading$ | async)">
+    <div class="py-1" *ngIf="(loading$ | async) === false">
       <div *ngIf="totals$ | async as totals" class="p-1">
         <div>Загалом: {{totals.totalSum / 100}}</div>
         <div *ngFor="let tagId of objectKeys(totals.byTags)">
@@ -44,9 +44,16 @@
         </div>
       </div>
       <ng-container *ngIf="expenses$ | async as expenses">
-        <div *ngFor="let expense of expenses" class="card my-1">
+        <div *ngFor="let expense of expenses" class="card card-block my-1">
           <div class="card-body">
-            <div>Опис: {{expense.description}}</div>
+            <div class="d-flex justify-content-between align-items-center">
+              <div>Опис: {{expense.description}}</div>
+              <i
+                class="bi bi-trash"
+                [class.text-danger]="isActiveExpense(expense.id) | async"
+                (click)="handleTrashClick(expense.id)"
+              ></i>
+            </div>
             <div>Сума: {{expense.amount / 100}}</div>
             <div>{{expense.timestamp | date: 'dd.MM.YYYY'}}</div>
             <div *ngIf="expense.tags" class="d-flex flex-wrap">

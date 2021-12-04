@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FetchService, FetchStatus } from '../../../services/fetch.service';
-import { BehaviorSubject, combineLatest, merge } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { RestApiService } from '../../../services/rest-api.service';
@@ -21,7 +21,10 @@ export interface Totals {
 export class ShowExpensesPageComponent implements OnInit {
   fetchTagsWrapper = this.fetchService.createWrapper();
   fetchExpensesWrapper = this.fetchService.createWrapper();
+  deleteExpenseWrapper = this.fetchService.createWrapper();
   NO_TAGS = -1;
+
+  activeExpenseId$ = new BehaviorSubject(-1);
 
   expenses$ = new BehaviorSubject<ExpenseResponse[]>([]);
   tags$ = new BehaviorSubject<Record<number, TagResponse>>({});
@@ -33,7 +36,7 @@ export class ShowExpensesPageComponent implements OnInit {
     this.fetchTagsWrapper.isInStatuses(FetchStatus.IN_PROGRESS),
   ])
     .pipe(map((values) => values.some((it) => it)));
-  error$ = merge(this.fetchExpensesWrapper.error$, this.fetchTagsWrapper.error$);
+  error$ = merge(this.fetchExpensesWrapper.error$, this.fetchTagsWrapper.error$, this.deleteExpenseWrapper.error$);
 
   searchForm!: FormGroup;
 
@@ -54,6 +57,7 @@ export class ShowExpensesPageComponent implements OnInit {
     if (this.searchForm.invalid) {
       return;
     }
+    this.activeExpenseId$.next(-1);
     const search: any = {};
     const formValue = this.searchForm.value;
     if (formValue.minDate) {
@@ -113,5 +117,17 @@ export class ShowExpensesPageComponent implements OnInit {
   getTotal(tagId: string): number {
     // tslint:disable-next-line:no-non-null-assertion
     return this.totals$.value?.byTags[tagId as any]!;
+  }
+
+  handleTrashClick(expenseId: number): void {
+    if (this.activeExpenseId$.value === expenseId) {
+      this.deleteExpenseWrapper.fetch(this.restApiService.deleteExpense(expenseId))
+        .subscribe(() => this.search());
+    }
+    this.activeExpenseId$.next(expenseId);
+  }
+
+  isActiveExpense(expenseId: number): Observable<boolean> {
+    return this.activeExpenseId$.pipe(map(value => value === expenseId));
   }
 }

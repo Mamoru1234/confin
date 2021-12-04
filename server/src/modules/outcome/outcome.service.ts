@@ -114,4 +114,11 @@ export default class OutcomeService {
       },
     });
   }
+
+  async deleteOutcome(user: UserEntity, outcomeId: number): Promise<void> {
+    await this.outcomeDao.delete(this.connection.manager, {
+      user,
+      id: outcomeId,
+    });
+  }
 }

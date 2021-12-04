@@ -1,8 +1,8 @@
 import {
   Body,
-  Controller,
+  Controller, Delete,
   Get,
-  Param,
+  Param, ParseIntPipe,
   Post,
   Put,
   Query,
@@ -17,6 +17,7 @@ import OutcomeService from './outcome.service';
 import { plainToClass } from 'class-transformer';
 import { DEFAULT_TRANSFORM_OPTIONS } from '../../constant/class-transform.options';
 import { ListOutcomeQuery } from './dto/list-outcome.query';
+import { DeleteResult } from 'typeorm';
 
 @Controller('outcome')
 @UseGuards(AppAuthGuard)
@@ -49,5 +50,13 @@ export default class OutcomeController {
   ): Promise<OutcomeResponse[]> {
     const outcomes = await this.outcomeService.listOutcome(user, query);
     return plainToClass(OutcomeResponse, outcomes, DEFAULT_TRANSFORM_OPTIONS);
+  }
+
+  @Delete('/:outcomeId')
+  async deleteOutcome(
+    @User() user: UserEntity,
+    @Param('outcomeId', ParseIntPipe) outcomeId: number,
+  ): Promise<void> {
+    await this.outcomeService.deleteOutcome(user, outcomeId);
   }
 }
