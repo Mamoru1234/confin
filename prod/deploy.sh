@@ -7,4 +7,3 @@ fi
 
 ssh -i "$SERVER_PEM_LOCATION" "ec2-user@$SERVER_HOST" "cd ~/confin && docker-compose pull"
 ssh -i "$SERVER_PEM_LOCATION" "ec2-user@$SERVER_HOST" "cd ~/confin && docker-compose up -d"
-ssh -i "$SERVER_PEM_LOCATION" "ec2-user@$SERVER_HOST" "docker exec -it confin_frontend_1 /usr/bin/crontab /crontab.txt"
