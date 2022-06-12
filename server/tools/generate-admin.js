@@ -15,8 +15,8 @@ function genAdmin() {
   if (!secret) {
     throw new Error('Please specify secret');
   }
-  const email = process.env.ADMIN_EMAIL;
   const password = process.env.ADMIN_PASS;
+  const email = process.env.ADMIN_EMAIL;
   console.log(`Email: ${email} Password: ${password}`);
   const hash = createHash(secret, email, password);
   console.log(
