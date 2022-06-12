@@ -1,8 +1,10 @@
 import {
   Body,
-  Controller, Delete,
+  Controller,
+  Delete,
   Get,
-  Param, ParseIntPipe,
+  Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -17,7 +19,6 @@ import OutcomeService from './outcome.service';
 import { plainToClass } from 'class-transformer';
 import { DEFAULT_TRANSFORM_OPTIONS } from '../../constant/class-transform.options';
 import { ListOutcomeQuery } from './dto/list-outcome.query';
-import { DeleteResult } from 'typeorm';
 
 @Controller('outcome')
 @UseGuards(AppAuthGuard)
