@@ -1,0 +1,22 @@
+name: "Server CI"
+on:
+  push:
+    paths:
+      - "server/**/*"
+      - ".github/workflows/server.yml"
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.15.1
+      - run: npm ci
+        working-directory: ./server
+      - run: npm lint
+        working-directory: ./server
+      - run: npm run build
+        working-directory: ./server
