@@ -35,6 +35,8 @@ jobs:
         working-directory: ./server
 
   Deploy:
+    needs:
+      - Build
     runs-on: ubuntu-latest
     if: github.ref_name == 'main'
     steps:
