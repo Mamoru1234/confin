@@ -16,7 +16,7 @@ jobs:
           node-version: 16.15.1
       - run: npm ci
         working-directory: ./server
-      - run: npm lint
+      - run: npm run lint
         working-directory: ./server
       - run: npm run build
         working-directory: ./server
