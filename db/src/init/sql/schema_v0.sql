@@ -28,7 +28,7 @@ CREATE TABLE "outcome_item"(
 );
 
 CREATE TABLE "outcome_item_tags"(
-    "tag_id" INT REFERENCES tag(id),
-    "outcome_item_id" INT REFERENCES outcome_item(id),
+    "tag_id" INT REFERENCES tag(id) ON DELETE CASCADE,
+    "outcome_item_id" INT REFERENCES outcome_item(id) ON DELETE CASCADE,
     PRIMARY KEY (tag_id, outcome_item_id)
 )

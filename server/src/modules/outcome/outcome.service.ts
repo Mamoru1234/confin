@@ -3,24 +3,19 @@ import UserEntity from '../database/entities/user.entity';
 import CreateOutcomeRequest from './dto/create-outcome.request';
 import OutcomeEntity from '../database/entities/outcome.entity';
 import TagDao from '../database/dao/tag.dao';
-import {
-  Between,
-  Connection,
-  FindConditions,
-  In,
-  LessThanOrEqual,
-  MoreThanOrEqual,
-} from 'typeorm';
+import { Between, In, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import TagEntity from '../database/entities/tag.entity';
 import OutcomeDao from '../database/dao/outcome.dao';
 import { ListOutcomeQuery } from './dto/list-outcome.query';
 import UpdateOutcomeRequest from './dto/update-outcome.request';
+import { EntityManager } from 'typeorm/entity-manager/EntityManager';
+import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 
 @Injectable()
 export default class OutcomeService {
   constructor(
     private readonly tagDao: TagDao,
-    private readonly connection: Connection,
+    private readonly entityManager: EntityManager,
     private readonly outcomeDao: OutcomeDao,
   ) {}
 
@@ -28,7 +23,7 @@ export default class OutcomeService {
     user: UserEntity,
     request: CreateOutcomeRequest,
   ): Promise<OutcomeEntity> {
-    return this.connection.transaction(async (txn) => {
+    return this.entityManager.transaction(async (txn) => {
       let tags: TagEntity[] = [];
       if (request.tags) {
         tags = await this.tagDao.find(txn, {
@@ -54,7 +49,7 @@ export default class OutcomeService {
     outcomeId: number,
     request: UpdateOutcomeRequest,
   ): Promise<OutcomeEntity> {
-    return this.connection.transaction(async (txn) => {
+    return this.entityManager.transaction(async (txn) => {
       const update: any = {};
       if (request.tags) {
         update.tags = await this.tagDao.find(txn, {
@@ -93,7 +88,7 @@ export default class OutcomeService {
     user: UserEntity,
     query: ListOutcomeQuery,
   ): Promise<OutcomeEntity[]> {
-    const where: FindConditions<OutcomeEntity> = {
+    const where: FindOptionsWhere<OutcomeEntity> = {
       user,
     };
     if (query.minTimestamp) {
@@ -106,7 +101,7 @@ export default class OutcomeService {
         where.timestamp = LessThanOrEqual(query.maxTimestamp);
       }
     }
-    return this.outcomeDao.find(this.connection.manager, {
+    return this.outcomeDao.find(this.entityManager, {
       where,
       relations: ['tags'],
       order: {
@@ -116,7 +111,7 @@ export default class OutcomeService {
   }
 
   async deleteOutcome(user: UserEntity, outcomeId: number): Promise<void> {
-    await this.outcomeDao.delete(this.connection.manager, {
+    await this.outcomeDao.delete(this.entityManager, {
       user,
       id: outcomeId,
     });

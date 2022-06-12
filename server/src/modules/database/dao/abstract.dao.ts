@@ -1,7 +1,9 @@
 import { EntityTarget } from 'typeorm/common/EntityTarget';
 import { EntityManager } from 'typeorm/entity-manager/EntityManager';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
-import { DeepPartial, FindConditions, FindOneOptions } from 'typeorm';
+import { DeepPartial, FindOneOptions } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export abstract class AbstractDao<T> {
   abstract target: EntityTarget<T>;
@@ -10,7 +12,7 @@ export abstract class AbstractDao<T> {
     return txn.getRepository(this.target).find(options);
   }
 
-  delete(txn: EntityManager, criteria: FindConditions<T>) {
+  delete(txn: EntityManager, criteria: FindOptionsWhere<T>) {
     return txn.getRepository(this.target).delete(criteria);
   }
 
@@ -24,8 +26,8 @@ export abstract class AbstractDao<T> {
 
   update(
     txn: EntityManager,
-    condition: FindConditions<T>,
-    data: DeepPartial<T>,
+    condition: FindOptionsWhere<T>,
+    data: QueryDeepPartialEntity<T>,
   ) {
     return txn.getRepository(this.target).update(condition, data);
   }

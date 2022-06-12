@@ -3,7 +3,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as morgan from 'morgan';
-import * as helmet from 'helmet';
+import helmet from 'helmet';
 import * as session from 'express-session';
 import * as connectRedis from 'connect-redis';
 
@@ -45,7 +45,7 @@ async function main(): Promise<void> {
       credentials: true,
     });
   }
-  await app.listenAsync(+configService.get('APP_PORT', 3000));
+  await app.listen(+configService.get('APP_PORT', 3000), '0.0.0.0');
 }
 
 main().catch(console.error.bind(console));
