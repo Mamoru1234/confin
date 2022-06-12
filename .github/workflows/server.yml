@@ -40,4 +40,16 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_name == 'main'
     steps:
-      - run: "echo \"Deploy\""
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          username: oleksiygontarpersonal
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build image
+        run: docker-compose build
+        working-directory: ./server
+
+      - name: Push image
+        run: docker-compose push
+        working-directory: ./server
