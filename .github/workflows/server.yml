@@ -47,9 +47,6 @@ jobs:
           username: oleksiygontarpersonal
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Pull image
-        run: docker pull oleksiygontarpersonal/confin:server-0.0.0
-
       - name: Build image
         run: docker-compose build
         working-directory: ./server
@@ -68,6 +65,7 @@ jobs:
             HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/tickets-server.pem
+            StrictHostKeyChecking no
           END
         env:
           SSH_USER: ec2-user
