@@ -3,5 +3,4 @@ node_modules/
 dist/
 test/
 build/
-Dockerfile
 *.tsbuildinfo
