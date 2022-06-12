@@ -28,7 +28,6 @@ jobs:
             ${{ runner.os }}-node-
 
       - run: npm ci
-        if: steps.npm-cache.outputs.cache-hit != 'true'
         working-directory: ./server
       - run: npm run lint
         working-directory: ./server
