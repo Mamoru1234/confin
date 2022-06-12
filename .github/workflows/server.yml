@@ -54,3 +54,26 @@ jobs:
       - name: Push image
         run: docker-compose push
         working-directory: ./server
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/tickets-server.pem
+          chmod 600 ~/.ssh/tickets-server.pem
+          cat >>~/.ssh/config <<END
+          Host tickets-server
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/tickets-server.pem
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ec2-user
+          SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          SSH_HOST: ec2-18-197-54-213.eu-central-1.compute.amazonaws.com
+
+      - name: Pull image
+        run: ssh tickets-server 'docker pull oleksiygontarpersonal/confin:server-0.0.0'
+
+      - name: Apply change
+        run: ssh tickets-server 'docker-compose up -d server'
