@@ -47,13 +47,15 @@ jobs:
           username: oleksiygontarpersonal
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build image
-        run: docker-compose build
-        working-directory: ./server
-
-      - name: Push image
-        run: docker-compose push
-        working-directory: ./server
+      - name: Build production image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./server
+          file: Dockerfile
+          push: true
+          tags: oleksiygontarpersonal/confin:server-0.0.0
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Configure SSH
         run: |
