@@ -4,7 +4,6 @@ services:
     image: oleksiygontarpersonal/confin:server-0.0.0
     build: .
     container_name: server.confin
-    env_file: .env
     environment:
       DB_HOST: db.confin
       REDIS_HOST: cache.confin
