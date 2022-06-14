@@ -140,4 +140,8 @@ export class ShowExpensesPageComponent implements OnInit {
       this.selectedTags$.next(selectedTags.concat([tagId]));
     }
   }
+
+  isActiveTag(tagId: number) {
+    return this.selectedTags$.value.includes(tagId);
+  }
 }

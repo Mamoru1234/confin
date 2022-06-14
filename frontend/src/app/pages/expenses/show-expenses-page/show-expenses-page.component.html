@@ -42,6 +42,7 @@
         <div
           *ngFor="let tagId of objectKeys(totals.byTags)"
           class="mx-2 my-1 p-1 btn btn-outline-success"
+          [class.active]="isActiveTag(+tagId)"
           (click)="toggleTag(+tagId)"
         >
           {{getTagValue(tagId)}}: {{getTotal(tagId) / 100}}
@@ -62,7 +63,6 @@
             <div *ngIf="expense.tags" class="d-flex flex-wrap">
               <div
                 *ngFor="let tag of expense.tags" class="mx-2 my-1 p-1 btn btn-outline-success"
-                (click)="toggleTag(tag)"
               >
                 {{getTagValue(tag)}}
               </div>
