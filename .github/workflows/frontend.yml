@@ -75,3 +75,7 @@ jobs:
       - name: Apply change on server
         if: github.ref_name == 'main'
         run: ssh tickets-server 'cd ~/confin && docker-compose up -d frontend'
+
+      - name: Update crontab
+        if: github.ref_name == 'main'
+        run: docker exec -it confin_frontend_1 /usr/bin/crontab /crontab.txt && echo \"Updated cron\"
