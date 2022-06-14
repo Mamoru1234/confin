@@ -78,4 +78,4 @@ jobs:
 
       - name: Update crontab
         if: github.ref_name == 'main'
-        run: docker exec -it confin_frontend_1 /usr/bin/crontab /crontab.txt && echo \"Updated cron\"
+        run: ssh tickets-server 'docker exec -it confin_frontend_1 /usr/bin/crontab /crontab.txt && echo \"Updated cron\"'
