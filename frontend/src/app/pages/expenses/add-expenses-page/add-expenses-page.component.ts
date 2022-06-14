@@ -69,6 +69,7 @@ export class AddExpensesPageComponent implements OnInit {
         this.form.reset({
           date: DateTime.now().toSQLDate(),
         });
+        this.selectedTags$.next([]);
         this.addedExpense$.next(true);
       });
   }

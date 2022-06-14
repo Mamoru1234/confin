@@ -25,6 +25,14 @@ export class ShowExpensesPageComponent implements OnInit {
   NO_TAGS = -1;
 
   expenses$ = new BehaviorSubject<ExpenseResponse[]>([]);
+  selectedTags$ = new BehaviorSubject<number[]>([]);
+  filteredExpenses$ = combineLatest([this.expenses$, this.selectedTags$])
+    .pipe(map(([expenses, selectedTags]): ExpenseResponse[] => {
+      if (selectedTags.length === 0) {
+        return expenses;
+      }
+      return expenses.filter((it) => selectedTags.some((selectedTag) => it.tags.includes(selectedTag)));
+    }));
   tags$ = new BehaviorSubject<Record<number, TagResponse>>({});
   totals$ = new BehaviorSubject<Totals | null>(null);
   objectKeys = Object.keys;
@@ -86,7 +94,7 @@ export class ShowExpensesPageComponent implements OnInit {
       }))
       .subscribe();
 
-    this.fetchExpensesWrapper.fetch(this.restApiService.getAllTags())
+    this.fetchTagsWrapper.fetch(this.restApiService.getAllTags())
       .pipe(tap((tags) => {
         const result: Record<number, TagResponse> = {};
         tags.forEach((it) => {
@@ -121,6 +129,15 @@ export class ShowExpensesPageComponent implements OnInit {
     if (shouldDelete) {
       this.deleteExpenseWrapper.fetch(this.restApiService.deleteExpense(expenseId))
         .subscribe(() => this.search());
+    }
+  }
+
+  toggleTag(tagId: number) {
+    const selectedTags = this.selectedTags$.value;
+    if (selectedTags.includes(tagId)) {
+      this.selectedTags$.next(selectedTags.filter((it) => it !== tagId));
+    } else {
+      this.selectedTags$.next(selectedTags.concat([tagId]));
     }
   }
 }
